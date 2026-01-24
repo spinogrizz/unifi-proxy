@@ -1,0 +1,17 @@
+# SSL certificates
+ssl/*.pem
+ssl/*.crt
+ssl/*.key
+
+# Environment
+.env
+!.env.example
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+CLAUDE.md

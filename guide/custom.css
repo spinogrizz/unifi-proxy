@@ -1,0 +1,337 @@
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-color: white;
+        --base-background-color: rgb(23, 23, 23);
+        --sidebar-background: rgb(26, 26, 26);
+        --sidebar-border-color: rgb(26, 26, 26);
+        --mono-saturation : 0%;
+        --mono-lightness : 0%;
+        --docsifytabs-tab-background: rgb(20, 20, 20);
+        --table-row-odd-background: rgb(20, 20, 20);
+        --table-cell-border-color: rgb(255,255,255,0);
+        --docsifytabs-tab-color: rgb(180, 180, 180);
+        --code-inline-color: #fff;
+        --code-inline-background: rgba(255, 255, 255, 0.1);
+    }
+
+    hr {
+        opacity: 0.25;
+    }
+}
+
+/* Светлая тема */
+@media (prefers-color-scheme: light) {
+    :root {
+        --theme-color: #000000;
+        --base-background-color: #f9f9f9;
+        --sidebar-background: #f5f5f5;
+        --sidebar-border-color: #f5f5f5;
+        --mono-saturation: 0%;
+        --mono-lightness: 0%;
+        --docsifytabs-tab-background: #f8f9fa;
+        --table-row-odd-background: #f8f9fa;
+        --table-cell-border-color: rgba(0,0,0,0.1);
+        --docsifytabs-tab-color: #6c757d;
+        --code-inline-background: #e8e8e8;
+        --code-inline-color: #000000;
+    }
+
+    aside.sidebar {
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    }
+}
+
+:root {
+    --sidebar-width: 20rem;
+    --content-max-width: 70rem;
+    --sidebar-toggle-icon-color: var(--theme-color);
+    --sidebar-nav-link-border-width: 0 3px 0 0;
+    --code-inline-padding: 2px 8px;
+    --code-inline-border-radius: 8px;
+}
+
+/* Hide scrollbars */
+aside.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+aside.sidebar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Give more room for sidebar toggle button */
+section.content article {
+    padding-left: 85px;
+    padding-top: 45px;
+}
+
+/* Prevent table cells from being too narrow */
+table td {
+    min-width: 120px;
+}
+
+/* Стили для таблиц в темной теме */
+@media (prefers-color-scheme: dark) {
+    table th {
+        background-color: rgb(30, 30, 30);
+    }
+}
+
+/* Стили для таблиц в светлой теме */
+@media (prefers-color-scheme: light) {
+    table th {
+        background-color: #e9ecef;
+        color: #2c3e50;
+    }
+}
+
+/* Классы для светлой и темной темы */
+@media (prefers-color-scheme: light) {
+    img.light { display: block; }
+    img.dark { display: none; }
+}
+
+@media (prefers-color-scheme: dark) {
+    img.light { display: none; }
+    img.dark { display: block; }
+}
+
+/* Remove text decoration on hover for headings */
+h1:hover *, h2:hover *, h3:hover *, h4:hover *, h5:hover *, h6:hover * {
+    text-decoration: none !important;
+}
+
+/* Larger margin for horizontal rules */
+hr {
+    margin: 3rem -5rem 2rem -5rem !important;
+}
+
+/* Full width images */
+.full-width {
+    width: 80%;
+    max-width: 80%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .full-width {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    code {
+        font-size: 0.8em !important;
+    }
+}
+
+/* Proxy form */
+.proxy-form {
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.proxy-form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-family: monospace;
+}
+
+.proxy-form .result {
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-family: monospace;
+    word-break: break-all;
+    min-height: 20px;
+}
+
+.proxy-form .buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.proxy-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.proxy-form button.copy {
+    background: #0078d4;
+    color: white;
+}
+
+.proxy-form button.download {
+    background: #28a745;
+    color: white;
+}
+
+.proxy-form button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.proxy-form .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .proxy-form {
+        background: rgb(30, 30, 30);
+    }
+
+    .proxy-form input[type="text"] {
+        background: rgb(40, 40, 40);
+        border: 1px solid rgb(60, 60, 60);
+        color: #fff;
+    }
+
+    .proxy-form .result {
+        background: rgb(40, 40, 40);
+        border: 1px solid rgb(60, 60, 60);
+        color: #ccc;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .proxy-form {
+        background: #f5f5f5;
+    }
+
+    .proxy-form input[type="text"] {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+
+    .proxy-form .result {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+}
+
+
+/* Logo */
+.sidebar h1.app-name::before {
+    content: "";
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 15%;
+    background: url('favicon.png') no-repeat;
+    background-size: contain;
+    margin-right: 16px;
+    vertical-align: middle;
+    position: relative;
+    top: 0px;
+}
+
+/* Inline-code: кнопка копирования */
+.markdown-section .inline-code-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--code-inline-background) !important;
+    color: var(--code-inline-color) !important;
+    padding: var(--code-inline-padding) !important;
+    border-radius: var(--code-inline-border-radius) !important;
+    cursor: pointer;
+}
+
+.markdown-section .inline-code-wrap code {
+    display: inline-flex;
+    align-items: center;
+    background: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.markdown-section code:not(pre code) {
+    background: var(--code-inline-background);
+    color: var(--code-inline-color);
+    padding: var(--code-inline-padding);
+    border-radius: var(--code-inline-border-radius);
+}
+
+.inline-copy-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.inline-copy-btn .copy-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+.inline-copy-btn:hover .copy-icon,
+.inline-copy-btn.is-copied .copy-icon {
+    opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+    .inline-copy-btn .copy-icon {
+        filter: invert(1);
+    }
+}
+
+/* Copy feedback уведомление */
+.copy-feedback {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    transition: opacity 0.2s;
+}
+
+.copy-feedback.show {
+    animation: copyFadeInOut 1.5s ease-in-out;
+}
+
+@keyframes copyFadeInOut {
+    0% { opacity: 0; }
+    15% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@media (prefers-color-scheme: light) {
+    .markdown-section .inline-code-wrap {
+        background: #e8e8e8 !important;
+        color: #000000 !important;
+        border: none !important;
+    }
+
+    .markdown-section code:not(pre code) {
+        background: #e8e8e8 !important;
+        color: #000000 !important;
+        border: none !important;
+    }
+}

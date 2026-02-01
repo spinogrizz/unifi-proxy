@@ -51,6 +51,15 @@
     --code-inline-border-radius: 8px;
 }
 
+/* Мобильная верстка: уменьшенный padding основного контента */
+@media (max-width: 768px) {
+  article#main {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 60px !important;
+  }
+}
+
 /* Hide scrollbars */
 aside.sidebar::-webkit-scrollbar {
     display: none;

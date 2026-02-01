@@ -55,28 +55,7 @@ location ~ ^/(?<target_domain>[^/]+\.(ui|ubnt)\.com)/(?<target_path>.+)$ {
 | `apt-release-candidate.artifacts.ui.com` | APT (Release Candidate) |
 | `apt-beta.artifacts.ui.com` | APT (Beta) |
 
-## Архитектура
 
-```
-nginx/
-├── nginx.conf              # Базовые настройки + include conf.d/*.conf
-└── conf.d/
-    ├── 10-stream.conf      # stream {} — SNI proxy (443)
-    └── 20-http.conf        # http {} — path-based proxy + guide (80)
-```
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                        nginx                            │
-├─────────────────────────────────────────────────────────┤
-│  stream (443)               │  http (80)                │
-│  ───────────                │  ─────────                │
-│  L4 SNI proxy               │  Path-based proxy         │
-│  Без терминации TLS         │  /<domain>/<path>         │
-│  Прозрачный passthrough     │  Health: /health          │
-│                             │  Guide: /                 │
-└─────────────────────────────────────────────────────────┘
-```
 
 ## Настройка клиентов
 
@@ -111,6 +90,4 @@ openssl s_client -connect your-proxy:443 -servername fw-download.ubnt.com \
 
 ## Лицензия
 
-MIT.
-
-Я не отвечаю за поломки вашего оборудования, вызванные в следствие подкладывания неправильных прошивок. Вы сами решаете, какую прошивку устанавливать на ваше оборудование.
+MIT — я не отвечаю за поломки вашего оборудования, вызванные в следствие подкладывания неправильных прошивок. Вы сами решаете, какую прошивку устанавливать на ваше оборудование.

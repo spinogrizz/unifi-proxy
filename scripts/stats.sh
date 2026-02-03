@@ -3,13 +3,16 @@
 # Скрипт для сбора статистики из stream логов nginx
 # Запускается по cron каждый час
 #
-# Переменные окружения:
-#   NGINX_LOG  - путь к stream.log
-#   STATS_FILE - путь к stats.json
+# Использование: stats.sh <stream.log> <stats.json>
 #
 
-LOG="${NGINX_LOG:?NGINX_LOG not set}"
-STATS="${STATS_FILE:?STATS_FILE not set}"
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <stream.log> <stats.json>" >&2
+    exit 1
+fi
+
+LOG="$1"
+STATS="$2"
 
 # Минимальный размер файла для учёта (1 MB)
 MIN_BYTES=1048576

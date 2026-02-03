@@ -45,7 +45,18 @@
 
 Да, это безопасно. Я лично использую этот сервис для обновления у всех друзей и знакомых, кому помогал настроить Ubiquiti и на своем домашнем оборудовании тоже.
 
-<div id="usage-stats" style="display:none"></div>
+Вот эта статистика обновляется каждые сутки на основе логов, из которых видно уникальные IP адреса консолей (роутеров), которые обновлялись, и размер скачанных данных за все время:
+
+<div id="usage-stats" style="display:none">
+    <div class="stat-card">
+        <div class="stat-number" id="stat-devices">—</div>
+        <div class="stat-label">консолей за сутки</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number"><span id="stat-size">—</span><span class="stat-unit"> ГБ</span></div>
+        <div class="stat-label">скачано за все время</div>
+    </div>
+</div>
 
 Исходные коды данного сервиса доступны на [GitHub](https://github.com/spinogrizz/unifi-proxy) для тех, кто хочет разобраться в его устройстве или поднять свой прокси-сервер подобный этому.
 
@@ -128,6 +139,54 @@ card:not(:only-of-type) {
         background-color: rgb(35, 35, 35);
         border-color: rgb(60, 60, 60);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
+    }
+}
+
+/* Статистика использования */
+#usage-stats {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+.stat-card {
+    min-width: 200px;
+    padding: 1.25rem 1.5rem 1.25rem 1.25rem;
+    border-radius: 10px;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stat-unit {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-left: 0.1em;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    opacity: 0.6;
+}
+
+@media (prefers-color-scheme: light) {
+    .stat-card {
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .stat-card {
+        background-color: rgb(30, 30, 30);
+        border: 1px solid rgb(50, 50, 50);
     }
 }
 </style>

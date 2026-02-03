@@ -145,7 +145,10 @@ const inlineCodeCopyPlugin = function(hook) {
 const statsPlugin = function(hook) {
     hook.doneEach(function() {
         const container = document.getElementById('usage-stats');
-        if (!container) return;
+        const devicesEl = document.getElementById('stat-devices');
+        const sizeEl = document.getElementById('stat-size');
+        
+        if (!container || !devicesEl || !sizeEl) return;
 
         fetch('https://' + PROXY_HOST + '/guide/stats.json')
             .then(r => r.json())
@@ -157,17 +160,12 @@ const statsPlugin = function(hook) {
 
                 const ips = data.unique_ips || 0;
                 const mb = data.total_mb || 0;
+                const gb = (mb / 1024).toFixed(1);
 
-                // Форматируем размер
-                let sizeText;
-                if (mb >= 1024) {
-                    sizeText = (mb / 1024).toFixed(1) + ' ГБ';
-                } else {
-                    sizeText = Math.round(mb) + ' МБ';
-                }
-
-                container.innerHTML = `🌐 <strong>${ips}</strong> устройств за 24ч &nbsp;·&nbsp; 📥 <strong>${sizeText}</strong> скачано`;
-                container.style.display = 'block';
+                devicesEl.textContent = ips;
+                sizeEl.textContent = gb;
+                
+                container.style.display = 'flex';
             })
             .catch(() => {
                 container.style.display = 'none';

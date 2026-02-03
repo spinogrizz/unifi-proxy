@@ -141,5 +141,39 @@ const inlineCodeCopyPlugin = function(hook) {
     });
 };
 
+// Плагин: статистика использования
+const statsPlugin = function(hook) {
+    hook.doneEach(function() {
+        const container = document.getElementById('usage-stats');
+        if (!container) return;
+
+        fetch('/guide/stats.json')
+            .then(r => r.json())
+            .then(data => {
+                if (!data.unique_ips && !data.total_mb) {
+                    container.style.display = 'none';
+                    return;
+                }
+
+                const ips = data.unique_ips || 0;
+                const mb = data.total_mb || 0;
+
+                // Форматируем размер
+                let sizeText;
+                if (mb >= 1024) {
+                    sizeText = (mb / 1024).toFixed(1) + ' ГБ';
+                } else {
+                    sizeText = Math.round(mb) + ' МБ';
+                }
+
+                container.innerHTML = `🌐 <strong>${ips}</strong> устройств за 24ч &nbsp;·&nbsp; 📥 <strong>${sizeText}</strong> скачано`;
+                container.style.display = 'block';
+            })
+            .catch(() => {
+                container.style.display = 'none';
+            });
+    });
+};
+
 window.$docsify = window.$docsify || {};
-window.$docsify.plugins = (window.$docsify.plugins || []).concat(inlineCodeCopyPlugin);
+window.$docsify.plugins = (window.$docsify.plugins || []).concat(inlineCodeCopyPlugin, statsPlugin);

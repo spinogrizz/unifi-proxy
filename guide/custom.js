@@ -147,7 +147,7 @@ const statsPlugin = function(hook) {
         const container = document.getElementById('usage-stats');
         if (!container) return;
 
-        fetch('/guide/stats.json')
+        fetch('https://' + PROXY_HOST + '/guide/stats.json')
             .then(r => r.json())
             .then(data => {
                 if (!data.unique_ips && !data.total_mb) {

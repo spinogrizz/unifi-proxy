@@ -13,7 +13,14 @@ EOF
 # Создаём пустой stats.json если его нет
 STATS_FILE="${STATS_FILE:-/var/www/guide/stats.json}"
 if [ ! -f "$STATS_FILE" ]; then
+    mkdir -p "$(dirname "$STATS_FILE")"
     echo '{"unique_ips":0,"total_mb":0,"updated":""}' > "$STATS_FILE"
+fi
+
+# Симлинк для nginx, если путь отличается от дефолтного
+DEFAULT_STATS="/var/www/guide/stats.json"
+if [ "$STATS_FILE" != "$DEFAULT_STATS" ]; then
+    ln -sf "$STATS_FILE" "$DEFAULT_STATS"
 fi
 
 # Запускаем crond и nginx

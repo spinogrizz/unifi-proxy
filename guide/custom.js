@@ -141,13 +141,24 @@ const inlineCodeCopyPlugin = function(hook) {
     });
 };
 
+// Склонение слов: 1 консоль, 2 консоли, 5 консолей
+function pluralize(n, one, few, many) {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod100 >= 11 && mod100 <= 19) return many;
+    if (mod10 === 1) return one;
+    if (mod10 >= 2 && mod10 <= 4) return few;
+    return many;
+}
+
 // Плагин: статистика использования
 const statsPlugin = function(hook) {
     hook.doneEach(function() {
         const container = document.getElementById('usage-stats');
         const devicesEl = document.getElementById('stat-devices');
+        const devicesLabelEl = document.getElementById('stat-devices-label');
         const sizeEl = document.getElementById('stat-size');
-        
+
         if (!container || !devicesEl || !sizeEl) return;
 
         fetch('https://' + PROXY_HOST + '/guide/stats.json')
@@ -163,8 +174,11 @@ const statsPlugin = function(hook) {
                 const gb = (mb / 1024).toFixed(1);
 
                 devicesEl.textContent = ips;
+                if (devicesLabelEl) {
+                    devicesLabelEl.textContent = pluralize(ips, 'консоль', 'консоли', 'консолей');
+                }
                 sizeEl.textContent = gb;
-                
+
                 container.style.display = 'flex';
             })
             .catch(() => {

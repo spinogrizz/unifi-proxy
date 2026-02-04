@@ -50,7 +50,7 @@
 <div id="usage-stats" style="display:none">
     <div class="stat-card">
         <div class="stat-number" id="stat-devices">—</div>
-        <div class="stat-label">консолей за сутки</div>
+        <div class="stat-label"><span id="stat-devices-label">консолей</span> за сутки</div>
     </div>
     <div class="stat-card">
         <div class="stat-number"><span id="stat-size">—</span><span class="stat-unit"> ГБ</span></div>

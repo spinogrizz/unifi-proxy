@@ -45,12 +45,16 @@
 
 Да, это безопасно. Я лично использую этот сервис для обновления у всех друзей и знакомых, кому помогал настроить Ubiquiti и на своем домашнем оборудовании тоже.
 
-Вот эта статистика обновляется каждые сутки на основе логов, из которых видно уникальные IP адреса консолей (роутеров), которые обновлялись, и размер скачанных данных за все время:
+Вот эта статистика обновляется каждый час на основе логов nginx, из которых видно уникальные IP адреса консолей (роутеров), которые обновлялись, количество и размер скачанных прошивок:
 
 <div id="usage-stats" style="display:none">
     <div class="stat-card">
         <div class="stat-number" id="stat-devices">—</div>
-        <div class="stat-label"><span id="stat-devices-label">консолей</span> за сутки</div>
+        <div class="stat-label"><span id="stat-devices-label">консолей</span> за 24 часа</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" id="stat-downloads">—</div>
+        <div class="stat-label"><span id="stat-downloads-label">прошивок</span> за 24 часа</div>
     </div>
     <div class="stat-card">
         <div class="stat-number"><span id="stat-size">—</span><span class="stat-unit"> ГБ</span></div>
@@ -145,6 +149,7 @@ card:not(:only-of-type) {
 /* Статистика использования */
 #usage-stats {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     margin: 1.5rem 0;
     padding: 0 !important;
@@ -152,9 +157,20 @@ card:not(:only-of-type) {
 }
 
 .stat-card {
-    min-width: 200px;
-    padding: 1.25rem 1.5rem 1.25rem 1.25rem;
+    min-width: 185px;
+    padding: 1.25rem 1.5rem 1rem 1.25rem;
     border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+    #usage-stats {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        min-width: auto;
+        width: 100%;
+    }
 }
 
 .stat-number {

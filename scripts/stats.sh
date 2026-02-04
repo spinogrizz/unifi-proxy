@@ -41,22 +41,27 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
         ip = $1
     }
 
-    # Уникальные IP за последние 24 часа
-    if (timestamp == "" || timestamp >= cutoff_24h) {
-        ips[ip] = 1
+    # Извлекаем bytes_sent
+    bytes = 0
+    match($0, /bytes_sent=([0-9]+)/)
+    if (RSTART > 0) {
+        bytes_str = substr($0, RSTART + 11)
+        match(bytes_str, /^[0-9]+/)
+        bytes = substr(bytes_str, 1, RLENGTH) + 0
     }
 
-    # Новые bytes (после последнего запуска)
-    if (timestamp == "" || last_ts == "" || timestamp > last_ts) {
-        match($0, /bytes_sent=([0-9]+)/)
-        if (RSTART > 0) {
-            bytes_str = substr($0, RSTART + 11)
-            match(bytes_str, /^[0-9]+/)
-            bytes = substr(bytes_str, 1, RLENGTH) + 0
+    # За последние 24 часа: уникальные IP и количество скачиваний
+    if (timestamp == "" || timestamp >= cutoff_24h) {
+        ips[ip] = 1
+        if (bytes > min_bytes) {
+            downloads_24h++
+        }
+    }
 
-            if (bytes > min_bytes) {
-                new_bytes += bytes
-            }
+    # Новые bytes (после последнего запуска) - для накопительного счётчика
+    if (timestamp == "" || last_ts == "" || timestamp > last_ts) {
+        if (bytes > min_bytes) {
+            new_bytes += bytes
         }
     }
 
@@ -66,13 +71,14 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
     }
 }
 END {
-    printf "%d %d %s\n", length(ips), new_bytes, max_ts
+    printf "%d %d %d %s\n", length(ips), downloads_24h, new_bytes, max_ts
 }' "$LOG")
 
 # Парсим результат
 UNIQUE_IPS=$(echo "$RESULT" | cut -d' ' -f1)
-NEW_BYTES=$(echo "$RESULT" | cut -d' ' -f2)
-MAX_TS=$(echo "$RESULT" | cut -d' ' -f3)
+DOWNLOADS_24H=$(echo "$RESULT" | cut -d' ' -f2)
+NEW_BYTES=$(echo "$RESULT" | cut -d' ' -f3)
+MAX_TS=$(echo "$RESULT" | cut -d' ' -f4)
 
 # Добавляем новые байты к накопленному значению
 NEW_MB=$(awk "BEGIN { printf \"%.1f\", $NEW_BYTES / 1048576 }")
@@ -82,10 +88,11 @@ TOTAL_MB=$(awk "BEGIN { printf \"%.1f\", $PREV_MB + $NEW_MB }")
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 jq -n \
     --argjson ips "$UNIQUE_IPS" \
+    --argjson downloads "$DOWNLOADS_24H" \
     --argjson mb "$TOTAL_MB" \
     --arg ts "$MAX_TS" \
     --arg updated "$NOW" \
-    '{unique_ips: $ips, total_mb: $mb, last_ts: $ts, updated: $updated}' > "${STATS}.tmp" && mv "${STATS}.tmp" "$STATS"
+    '{unique_ips: $ips, downloads_24h: $downloads, total_mb: $mb, last_ts: $ts, updated: $updated}' > "${STATS}.tmp" && mv "${STATS}.tmp" "$STATS"
 
 # Ротация: раз в сутки в 00:xx
 if [ "$(date +%H)" = "00" ]; then

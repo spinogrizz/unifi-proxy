@@ -157,6 +157,8 @@ const statsPlugin = function(hook) {
         const container = document.getElementById('usage-stats');
         const devicesEl = document.getElementById('stat-devices');
         const devicesLabelEl = document.getElementById('stat-devices-label');
+        const downloadsEl = document.getElementById('stat-downloads');
+        const downloadsLabelEl = document.getElementById('stat-downloads-label');
         const sizeEl = document.getElementById('stat-size');
 
         if (!container || !devicesEl || !sizeEl) return;
@@ -170,6 +172,7 @@ const statsPlugin = function(hook) {
                 }
 
                 const ips = data.unique_ips || 0;
+                const downloads = data.downloads_24h || 0;
                 const mb = data.total_mb || 0;
                 const gb = (mb / 1024).toFixed(1);
 
@@ -177,6 +180,14 @@ const statsPlugin = function(hook) {
                 if (devicesLabelEl) {
                     devicesLabelEl.textContent = pluralize(ips, 'консоль', 'консоли', 'консолей');
                 }
+
+                if (downloadsEl) {
+                    downloadsEl.textContent = downloads;
+                }
+                if (downloadsLabelEl) {
+                    downloadsLabelEl.textContent = pluralize(downloads, 'прошивка', 'прошивки', 'прошивок');
+                }
+
                 sizeEl.textContent = gb;
 
                 container.style.display = 'flex';

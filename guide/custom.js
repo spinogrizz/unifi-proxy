@@ -172,7 +172,7 @@ const statsPlugin = function(hook) {
                 }
 
                 const ips = data.unique_ips || 0;
-                const downloads = data.downloads_24h || 0;
+                const downloads = data.downloads_total || 0;
                 const mb = data.total_mb || 0;
                 const gb = (mb / 1024).toFixed(1);
 

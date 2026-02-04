@@ -54,7 +54,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-number" id="stat-downloads">—</div>
-        <div class="stat-label"><span id="stat-downloads-label">прошивок</span> за 24 часа</div>
+        <div class="stat-label"><span id="stat-downloads-label">прошивок</span> скачано</div>
     </div>
     <div class="stat-card">
         <div class="stat-number"><span id="stat-size">—</span><span class="stat-unit"> ГБ</span></div>

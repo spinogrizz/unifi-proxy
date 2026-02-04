@@ -20,9 +20,11 @@ MIN_BYTES=1048576
 # Читаем предыдущие значения из stats.json
 if [ -f "$STATS" ]; then
     PREV_MB=$(jq -r '.total_mb // 0' "$STATS")
+    PREV_DOWNLOADS=$(jq -r '.downloads_total // 0' "$STATS")
     LAST_TS=$(jq -r '.last_ts // ""' "$STATS")
 else
     PREV_MB=0
+    PREV_DOWNLOADS=0
     LAST_TS=""
 fi
 
@@ -50,18 +52,16 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
         bytes = substr(bytes_str, 1, RLENGTH) + 0
     }
 
-    # За последние 24 часа: уникальные IP и количество скачиваний
+    # За последние 24 часа: уникальные IP
     if (timestamp == "" || timestamp >= cutoff_24h) {
         ips[ip] = 1
-        if (bytes > min_bytes) {
-            downloads_24h++
-        }
     }
 
-    # Новые bytes (после последнего запуска) - для накопительного счётчика
+    # Новые данные (после последнего запуска) - для накопительных счётчиков
     if (timestamp == "" || last_ts == "" || timestamp > last_ts) {
         if (bytes > min_bytes) {
             new_bytes += bytes
+            new_downloads++
         }
     }
 
@@ -71,28 +71,29 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
     }
 }
 END {
-    printf "%d %d %d %s\n", length(ips), downloads_24h, new_bytes, max_ts
+    printf "%d %d %d %s\n", length(ips), new_downloads, new_bytes, max_ts
 }' "$LOG")
 
 # Парсим результат
 UNIQUE_IPS=$(echo "$RESULT" | cut -d' ' -f1)
-DOWNLOADS_24H=$(echo "$RESULT" | cut -d' ' -f2)
+NEW_DOWNLOADS=$(echo "$RESULT" | cut -d' ' -f2)
 NEW_BYTES=$(echo "$RESULT" | cut -d' ' -f3)
 MAX_TS=$(echo "$RESULT" | cut -d' ' -f4)
 
-# Добавляем новые байты к накопленному значению
+# Добавляем новые значения к накопленным
 NEW_MB=$(awk "BEGIN { printf \"%.1f\", $NEW_BYTES / 1048576 }")
 TOTAL_MB=$(awk "BEGIN { printf \"%.1f\", $PREV_MB + $NEW_MB }")
+TOTAL_DOWNLOADS=$((PREV_DOWNLOADS + NEW_DOWNLOADS))
 
 # Генерируем JSON
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 jq -n \
     --argjson ips "$UNIQUE_IPS" \
-    --argjson downloads "$DOWNLOADS_24H" \
+    --argjson downloads "$TOTAL_DOWNLOADS" \
     --argjson mb "$TOTAL_MB" \
     --arg ts "$MAX_TS" \
     --arg updated "$NOW" \
-    '{unique_ips: $ips, downloads_24h: $downloads, total_mb: $mb, last_ts: $ts, updated: $updated}' > "${STATS}.tmp" && mv "${STATS}.tmp" "$STATS"
+    '{unique_ips: $ips, downloads_total: $downloads, total_mb: $mb, last_ts: $ts, updated: $updated}' > "${STATS}.tmp" && mv "${STATS}.tmp" "$STATS"
 
 # Ротация: раз в сутки в 00:xx
 if [ "$(date +%H)" = "00" ]; then

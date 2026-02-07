@@ -28,11 +28,15 @@ else
     LAST_TS=""
 fi
 
-# Получаем cutoff для уникальных IP (24 часа назад)
-CUTOFF_24H=$(date -u -d "@$(($(date +%s) - 86400))" +%Y-%m-%dT%H:%M:%S 2>/dev/null || echo "1970-01-01T00:00:00")
+# Для 24ч окна: учитываем вчерашний архив, если есть
+LOGDIR=$(dirname "$LOG")
+LOGNAME=$(basename "$LOG" .log)
+YESTERDAY=$(date -d "yesterday" +%Y%m%d 2>/dev/null || date -v-1d +%Y%m%d)
+ARCHIVE="${LOGDIR}/${LOGNAME}.${YESTERDAY}.log.gz"
 
 # Парсим лог
-RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MIN_BYTES" '
+if [ -s "$ARCHIVE" ]; then
+    RESULT=$( (gzip -cd "$ARCHIVE"; cat "$LOG") | awk -v last_ts="$LAST_TS" -v min_bytes="$MIN_BYTES" '
 {
     # Определяем формат: с таймстемпом или без
     if ($1 ~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
@@ -52,10 +56,48 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
         bytes = substr(bytes_str, 1, RLENGTH) + 0
     }
 
-    # За последние 24 часа: уникальные IP
-    if (timestamp == "" || timestamp >= cutoff_24h) {
-        ips[ip] = 1
+    # Уникальные IP за вчера+сегодня (архив + текущий лог)
+    ips[ip] = 1
+
+    # Новые данные (после последнего запуска) - для накопительных счётчиков
+    if (timestamp == "" || last_ts == "" || timestamp > last_ts) {
+        if (bytes > min_bytes) {
+            new_bytes += bytes
+            new_downloads++
+        }
     }
+
+    # Запоминаем последний таймстемп
+    if (timestamp != "") {
+        max_ts = timestamp
+    }
+}
+END {
+    printf "%d %d %d %s\n", length(ips), new_downloads, new_bytes, max_ts
+}')
+else
+    RESULT=$(awk -v last_ts="$LAST_TS" -v min_bytes="$MIN_BYTES" '
+{
+    # Определяем формат: с таймстемпом или без
+    if ($1 ~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}/) {
+        timestamp = $1
+        ip = $2
+    } else {
+        timestamp = ""
+        ip = $1
+    }
+
+    # Извлекаем bytes_sent
+    bytes = 0
+    match($0, /bytes_sent=([0-9]+)/)
+    if (RSTART > 0) {
+        bytes_str = substr($0, RSTART + 11)
+        match(bytes_str, /^[0-9]+/)
+        bytes = substr(bytes_str, 1, RLENGTH) + 0
+    }
+
+    # Уникальные IP за текущий лог
+    ips[ip] = 1
 
     # Новые данные (после последнего запуска) - для накопительных счётчиков
     if (timestamp == "" || last_ts == "" || timestamp > last_ts) {
@@ -73,6 +115,7 @@ RESULT=$(awk -v cutoff_24h="$CUTOFF_24H" -v last_ts="$LAST_TS" -v min_bytes="$MI
 END {
     printf "%d %d %d %s\n", length(ips), new_downloads, new_bytes, max_ts
 }' "$LOG")
+fi
 
 # Парсим результат
 UNIQUE_IPS=$(echo "$RESULT" | cut -d' ' -f1)
@@ -97,10 +140,6 @@ jq -n \
 
 # Ротация: раз в сутки в 00:xx
 if [ "$(date +%H)" = "00" ]; then
-    LOGDIR=$(dirname "$LOG")
-    LOGNAME=$(basename "$LOG" .log)
-    YESTERDAY=$(date -d "yesterday" +%Y%m%d 2>/dev/null || date -v-1d +%Y%m%d)
-
     # Архивируем текущий лог в gz
     if [ -s "$LOG" ]; then
         gzip -c "$LOG" > "${LOGDIR}/${LOGNAME}.${YESTERDAY}.log.gz"

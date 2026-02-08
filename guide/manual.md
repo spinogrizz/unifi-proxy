@@ -1,28 +1,26 @@
-# Ручное обновление
+## Ручное обновление
 
-Если вам не нужны авто-обновления, то на этом сервере есть дополнительный прокси, позволяющий с официальных сайтов Ubiquiti скачать прошивки находясь в России.
+Прокси позволяет скачивать прошивки для ручной установки без настройки DNS. Вам нужно лишь немного изменить ссылку на официальный файл, и запрос пройдет через сервер в Албании.
 
-Вам нужно в разделе [Software Downloads](https://www.ui.com/download/releases/firmware) найти нужную прошивку и вставить ссылку в конвертер ниже для получения ссылки, которая будет работать в России.
-
-По сути, надо просто заменить **https://** в исходной ссылке на **https://unifi.gryzlov.com/** и вы получите работающую ссылку, которую можно передать на скачивание в меню **Manual Firmware Upgrade** или в консоли на **ubnt-systool**.
+Вам нужно в разделе [Software Downloads](https://www.ui.com/download/releases/firmware) найти нужную прошивку и вставить ссылку в конвертер ниже для получения ссылки.
 
 Например, если у вас ссылка на прошивку:
 
-<span style="font-style: italic">https:&#x2F;&#x2F;<span style="font-weight: bold; text-decoration: underline;">fw-download.ubnt.com</span>/data/unifi-firmware/something.bin</span>
+<span style="font-style: italic; opacity: 0.5;">https:&#x2F;&#x2F;</span><span style="font-weight: bold; text-decoration: underline; opacity: 1;">fw-download.ubnt.com</span><span style="font-style: italic; opacity: 0.5;">/firmware.bin</span>
 
-то после конвертации она будет выглядеть так:
+То ваша ссылка для скачивания будет выглядеть так:
 
-<span style="font-weight: italic">https:&#x2F;&#x2F;unifi.gryzlov.com/</span><span style="font-weight: bold; text-decoration: underline;">fw-download.ubnt.com</span>/data/unifi-firmware/something.bin</span>
+<span style="font-style: italic; text-decoration: underline; opacity: 0.5;">https:&#x2F;&#x2F;unifi.gryzlov.com</span><span style="font-weight: bold">/fw-download.ubnt.com/</span><span style="font-style: italic; opacity: 0.5;">firmware.bin</span>
 
 
 ---
 
 ### 🔗  Конвертер ссылок
 
-Для удобства, можете вставить ссылку на прошивку с сайта Ubiquiti и получить рабочую ссылку для скачивания.
+Вставьте оригинальную ссылку на скачивание прошивки с [ui.com](https://ui.com/download/releases/firmware) для автоматического преобразования:
 
 <div class="proxy-form">
-  <input type="text" id="original-url" placeholder="https://fw-download.ubnt.com/data/..." oninput="convertUrl()">
+  <input type="text" id="original-url" placeholder="https://fw-download.ui.com/data/..." oninput="convertUrl()">
   <div class="error" id="error-message"></div>
   <div class="buttons">
     <button class="download" id="download-btn" onclick="downloadFile()" disabled>Скачать файл</button>
@@ -32,12 +30,12 @@
 
 ---
 
-### 📝  Как и где использовать
+### 📝  Как использовать
 
 1. Найдите ссылку на прошивку на [ui.com/download](https://ui.com/download/releases/firmware) или в release notes
 2. Вставьте ссылку в конвертер выше и получите рабочую ссылку для скачивания
-3. Отключите автоматическое обновление устройств в настройках UniFi Network
-4. Перейдите в нужное вам устройство и нажмите **Manual Firmware Upgrade**
+3. Отключите автоматическое обновление устройств в настройках UniFi Network
+4. Перейдите в нужное вам устройство и нажмите **Manual Firmware Upgrade**
 
 Можно этот механизм также использовать для обновления через SSH, используя [Advanced Updating Techniques](https://help.ui.com/hc/en-us/articles/204910064-UniFi-Advanced-Updating-Techniques).
 

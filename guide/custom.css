@@ -36,7 +36,7 @@
 
 :root {
     --content-max-width: 70rem;
-    --code-inline-padding: 2px 8px;
+    --code-inline-padding: 1px 6px;
     --code-inline-border-radius: 8px;
 }
 
@@ -80,6 +80,21 @@ table td {
     img.dark { display: block; }
 }
 
+/* Кнопка «Назад» над заголовком (не на index) */
+.markdown-section .back-link {
+    display: inline-block;
+    /* margin-bottom: 0.75rem; */
+    margin: 0px;
+    color: var(--theme-color);
+    opacity: 0.5;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+.markdown-section .back-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 /* Remove text decoration on hover for headings */
 h1:hover *, h2:hover *, h3:hover *, h4:hover *, h5:hover *, h6:hover * {
     text-decoration: none !important;
@@ -88,6 +103,10 @@ h1:hover *, h2:hover *, h3:hover *, h4:hover *, h5:hover *, h6:hover * {
 /* Larger margin for horizontal rules */
 hr {
     margin: 3rem -5rem 2rem -5rem !important;
+}
+
+.markdown-section h2 { 
+    margin-top: 12px !important;
 }
 
 /* Full width images */

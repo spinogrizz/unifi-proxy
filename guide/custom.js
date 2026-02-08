@@ -151,6 +151,27 @@ function pluralize(n, one, few, many) {
     return many;
 }
 
+// Плагин: кнопка «Назад» на страницах, отличных от index
+const backButtonPlugin = function(hook) {
+    hook.doneEach(function() {
+        const hash = window.location.hash || '#/';
+        const path = hash.replace(/^#\/?/, '/').replace(/\?.*$/, '');
+        // Только не на главной (index)
+        if (path === '/' || path === '') return;
+
+        const h2Elements = document.querySelectorAll('.markdown-section h2');
+        h2Elements.forEach(h2 => {
+            if (!h2.previousElementSibling?.classList.contains('back-link')) {
+                const backLink = document.createElement('a');
+                backLink.href = '#/';
+                backLink.className = 'back-link';
+                backLink.textContent = '« Назад';
+                h2.parentNode.insertBefore(backLink, h2);
+            }
+        });
+    });
+};
+
 // Плагин: статистика использования
 const statsPlugin = function(hook) {
     hook.doneEach(function() {
@@ -199,4 +220,4 @@ const statsPlugin = function(hook) {
 };
 
 window.$docsify = window.$docsify || {};
-window.$docsify.plugins = (window.$docsify.plugins || []).concat(inlineCodeCopyPlugin, statsPlugin);
+window.$docsify.plugins = (window.$docsify.plugins || []).concat(inlineCodeCopyPlugin, backButtonPlugin, statsPlugin);

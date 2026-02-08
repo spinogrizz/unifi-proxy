@@ -102,7 +102,7 @@ const inlineCodeCopyPlugin = function(hook) {
             button.setAttribute('aria-label', 'Скопировать');
 
             const icon = document.createElement('img');
-            icon.src = 'copy.svg';
+            icon.src = 'images/copy.svg';
             icon.alt = 'Copy';
             icon.classList.add('copy-icon');
 
@@ -178,14 +178,14 @@ const statsPlugin = function(hook) {
 
                 devicesEl.textContent = ips;
                 if (devicesLabelEl) {
-                    devicesLabelEl.textContent = pluralize(ips, 'консоль', 'консоли', 'консолей');
+                    devicesLabelEl.textContent = pluralize(ips, 'IP адрес', 'IP адреса', 'IP адресов');
                 }
 
                 if (downloadsEl) {
                     downloadsEl.textContent = downloads;
                 }
                 if (downloadsLabelEl) {
-                    downloadsLabelEl.textContent = pluralize(downloads, 'прошивка', 'прошивки', 'прошивок');
+                    downloadsLabelEl.textContent = pluralize(downloads, 'обновление', 'обновления', 'обновлений');
                 }
 
                 sizeEl.textContent = gb;

@@ -3,8 +3,6 @@
     :root {
         --theme-color: white;
         --base-background-color: rgb(23, 23, 23);
-        --sidebar-background: rgb(26, 26, 26);
-        --sidebar-border-color: rgb(26, 26, 26);
         --mono-saturation : 0%;
         --mono-lightness : 0%;
         --docsifytabs-tab-background: rgb(20, 20, 20);
@@ -25,8 +23,6 @@
     :root {
         --theme-color: #000000;
         --base-background-color: #f9f9f9;
-        --sidebar-background: #f5f5f5;
-        --sidebar-border-color: #f5f5f5;
         --mono-saturation: 0%;
         --mono-lightness: 0%;
         --docsifytabs-tab-background: #f8f9fa;
@@ -36,17 +32,10 @@
         --code-inline-background: #e8e8e8;
         --code-inline-color: #000000;
     }
-
-    aside.sidebar {
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    }
 }
 
 :root {
-    --sidebar-width: 20rem;
     --content-max-width: 70rem;
-    --sidebar-toggle-icon-color: var(--theme-color);
-    --sidebar-nav-link-border-width: 0 3px 0 0;
     --code-inline-padding: 2px 8px;
     --code-inline-border-radius: 8px;
 }
@@ -58,22 +47,6 @@
     padding-right: 20px !important;
     padding-top: 60px !important;
   }
-}
-
-/* Hide scrollbars */
-aside.sidebar::-webkit-scrollbar {
-    display: none;
-}
-
-aside.sidebar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-/* Give more room for sidebar toggle button */
-section.content article {
-    padding-left: 85px;
-    padding-top: 45px;
 }
 
 /* Prevent table cells from being too narrow */
@@ -232,21 +205,6 @@ hr {
     }
 }
 
-
-/* Logo */
-.sidebar h1.app-name::before {
-    content: "";
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border-radius: 15%;
-    background: url('favicon.png') no-repeat;
-    background-size: contain;
-    margin-right: 16px;
-    vertical-align: middle;
-    position: relative;
-    top: 0px;
-}
 
 /* Inline-code: кнопка копирования */
 .markdown-section .inline-code-wrap {

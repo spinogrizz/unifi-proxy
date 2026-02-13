@@ -1,14 +1,9 @@
 // Proxy URL converter
 const PROXY_HOST = 'unifi.gryzlov.com';
-const ALLOWED_DOMAINS = [
-    'fw-download.ubnt.com',
-    'fw-update.ubnt.com',
-    'fw-update.ui.com',
-    'fw-download.ui.com',
-    'apt.artifacts.ui.com',
-    'apt-release-candidate.artifacts.ui.com',
-    'apt-beta.artifacts.ui.com'
-];
+// Любой поддомен *.ui.com или *.ubnt.com
+function isAllowedDomain(hostname) {
+    return /\.(ui|ubnt)\.com$/.test(hostname);
+}
 
 let convertedUrl = '';
 
@@ -37,8 +32,8 @@ function convertUrl() {
         return;
     }
 
-    if (!ALLOWED_DOMAINS.includes(url.hostname)) {
-        error.textContent = 'Домен не поддерживается. Разрешены: ' + ALLOWED_DOMAINS.join(', ');
+    if (!isAllowedDomain(url.hostname)) {
+        error.textContent = 'Домен не поддерживается. Разрешены только *.ui.com и *.ubnt.com';
         copyBtn.disabled = true;
         downloadBtn.disabled = true;
         return;
